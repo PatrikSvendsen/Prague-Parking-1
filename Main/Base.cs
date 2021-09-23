@@ -47,7 +47,7 @@ namespace Main
             //}
         }
 
-        public static void MainMenu()            //TODO: MENY   
+        public static string MainMenu()            //TODO: MENY   
         {
 
             Console.Clear();
@@ -78,6 +78,7 @@ namespace Main
                     MainMenu();
                     break;
             }
+            return MainMenu();
         }
         public static void TypeOfVehicle()
         {
@@ -221,9 +222,9 @@ namespace Main
 
             //Console.WriteLine("Rad 197");
 
-            foreach (var licensePlate in parkingList)
+            foreach (var vehiclePlate in parkingList)
             {
-                Console.WriteLine("\nVehicle with {0} has now been collected at {1}", licensePlate, now);
+                Console.WriteLine("\nVehicle with {0} has now been collected at {1}", vehiclePlate, now);
                 //Console.WriteLine("Rad 199");
                 break;
             }
@@ -235,14 +236,14 @@ namespace Main
         {
             Console.WriteLine("Enter your license plate number: ");
 
-            try
+            //try
             {
-                string licensePlate = Console.ReadLine().ToUpper();
+                string vehiclePlate = Console.ReadLine().ToUpper();
                 int newSpot;
 
                 for (int i = 1; i < parkingList.Length; i++)
                 {
-                    if (parkingList.Contains(licensePlate))
+                    if (parkingList.Contains(vehiclePlate))
                     {
                         Console.Clear();
                         Console.WriteLine();
@@ -253,24 +254,24 @@ namespace Main
                         {
                             parkingList[newSpot] = parkingList[i];
                             parkingList[i] = null;
-                            Console.WriteLine("Your vehicle with license plate {0} is moved to spot {1}", parkingList[newSpot], newSpot + 1);
-                            MainMenu();
+                            //Console.WriteLine("Your vehicle with license plate {0} is moved to spot {1}", parkingList[newSpot], newSpot);
+                            Console.WriteLine("Your vehicle with license plate {0} is moved to spot {1}", vehiclePlate, newSpot);
                             break;
                         }
                     }
-
                 }
             }
-            catch (FormatException e)
-            {
-                Console.WriteLine("Something went wrong with moving your vehicle", e);
-                Console.WriteLine();
-            }
-            return MoveVehicle();
-        }
+            //catch (FormatException e)
+            //{
+            //    Console.WriteLine("Something went wrong with moving your vehicle", e);
+            //    Console.WriteLine();
+            //}
+
+            return ReturnMainMenu();
+        }       //TODO: Fungerar inte, flyttar endast fordon på plats 1
 
         public static void FindVehicle() { }
-        public static void ShowParkingList()
+        public static string ShowParkingList()
         {
             Console.Clear();
             Console.WriteLine("Below is the parking lot with current parked vehicles\n");
@@ -297,12 +298,14 @@ namespace Main
                     {
                         Console.Write(i + ": " + parkingList[i] + "\t");
                         rows++;
+                        
                     }
                 }
-                Console.WriteLine("\n");
+                return ReturnMainMenu();
             }
             //catch (FormatException e)
-            //{
+            //{4
+
             //    Console.WriteLine();
             //    Console.WriteLine("STOP!");
             //}
@@ -313,9 +316,25 @@ namespace Main
         //    Console.WriteLine("Something went wrong with moving your vehicle", e);
         //    Console.WriteLine();
         //}
+        public static string ReturnMainMenu()
+        {
+            try
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine("Press a key to key to return to main mennu");
+                Console.ReadKey();
+                Console.WriteLine("\n");
+                
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("Something went wrong, please try again", e);
+                Console.WriteLine();
+            }
+            return MainMenu();
+        }
 
     }
-
 }
 
 
