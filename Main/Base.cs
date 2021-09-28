@@ -30,8 +30,8 @@ using System.Linq;
     *Går att använda "friviliga parametrar" från demo 07 Metoder för att kunna göra en visuell bild av parkeringen.
     *
     *----MoveVehicle
-    *Funkar, säger till om ett fordon redan står på platsen. Måste fixas så att MC kan stå på samma. .Join / .Insert 
-    *
+    *Går att flytta fordon, står det ett fordon på den platsen kommer felmeddelande.  
+    *.TrimEnd funktion kanske?
     *
     *---CollectVehicle
     *Fungerar men måste anpassas så att MC-/CAR-# läggs till - använd funktionen från MoveVehicle.
@@ -44,7 +44,7 @@ namespace Main
     {
 
 
-        public static string[] parkingList = new string[101];     //Tilldelade 100 platser för parkeringen.
+        public static string[] parkingList = new string[100];     //Tilldelade 100 platser för parkeringen.
 
         public static void Main(string[] args)
         {
@@ -134,14 +134,11 @@ namespace Main
             switch (submenu)
 
             {
-                //case 1: Console.WriteLine(); RegisterCar(); break;
-                //case 2: Console.WriteLine(); RegisterVehicle(); break;                
                 case 1: int input1 = submenu; break;
                 case 2: int input2 = submenu; break;
-                //case 3: Console.WriteLine("Rad 90"); MainMenu(); break;
 
                 default:
-                    Console.WriteLine("I register koden");
+                    Console.WriteLine("If you are here, something bad happaned. Press any key to return back.");
                     Console.ReadKey();
                     //MainMenu();
                     break;
@@ -150,86 +147,46 @@ namespace Main
             vehiclePlate = Console.ReadLine().ToUpper();
             Console.WriteLine();
             string newVPlate = TypeOfVehicle(submenu, vehiclePlate);
-            if (parkingList.Contains("CAR@" + vehiclePlate) && parkingList.Contains(newVPlate))
+
+            for (int i = 0; i < parkingList.Length; i++)
             {
-                Console.WriteLine();
-                Console.WriteLine("Your vehicle is already parked");
-                Console.ReadKey();
-                RegisterVehicle("");
-            }
-            else
-            {
-                if (newVPlate.Length <= 10)
+                if (parkingList[i] == null)
                 {
-                    for (int i = 1; i < parkingList.Length; i++)
+                    if (newVPlate.Length <= 10)
                     {
-                        if (parkingList[i] == null)
-                        {
-                            parkingList[i] = newVPlate;
-                            Console.WriteLine("Your vehicle with license plate: {0} is now parked at P{1} at {2}", newVPlate, i, now);
-                            break;
-                        }
+                        parkingList[i] = newVPlate;
+                        Console.WriteLine("Your vehicle with license plate: {0} is now parked at P{1} at {2}", newVPlate, i + 1, now);
+                        Console.WriteLine("Press a key to return to main menu.");
+                        Console.ReadKey();
+                        MainMenu();
+                        break;
                     }
-                    Console.WriteLine("\n\nPress a key to return to main menu");
-                    Console.ReadKey();
-                    //MainMenu();
+                    else
+                    {
+                        Console.WriteLine("You entered a wrong value");
+                        Console.WriteLine("\n\nPress a key to try again ");
+                        Console.ReadKey();
+                        break;
+                    }
                 }
-                else
+                else if (parkingList[i].Contains("CAR@" + vehiclePlate) || parkingList[i].Contains("MC@" + vehiclePlate))
                 {
-                    Console.WriteLine("You entered a wrong value");
-                    Console.WriteLine("\n\nPress a key to try again ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\n\nA vehicle with this license plate: {0} is already parked here.", vehiclePlate);
+                    Console.WriteLine("\nPress a key to return to main menu.");
                     Console.ReadKey();
-                    RegisterVehicle("");
+                    Console.ResetColor();
+                    MainMenu();
+
                 }
             }
+
             //Console.WriteLine("\n\nPress a key to return to main menu");
             //Console.ReadKey();
-
+            MainMenu();
         }
 
         //MainMenu();
-
-        //public static void RegisterCar()       //TODO: Snygga till koden
-        //{
-        //    Console.Clear();
-        //    Console.WriteLine();
-        //    Console.Write("Please enter the License plate number: ");
-        //    string newVehiclePlate = Console.ReadLine().ToUpper();
-        //    Console.WriteLine();
-        //    DateTime now = DateTime.Now;
-
-        //    string vehiclePlate = "CAR@" + newVehiclePlate;
-
-        //    if (parkingList.Contains(vehiclePlate))
-        //    {
-        //        Console.WriteLine();
-        //        Console.WriteLine("Your vehicle is already parked");
-        //        Console.ReadKey();
-        //        //MainMenu();
-        //    }
-        //    else if (vehiclePlate.Length <= 10)
-        //    {
-        //        for (int i = 1; i < parkingList.Length; i++)
-        //        {
-        //            if (parkingList[i] == null)
-        //            {
-        //                parkingList[i] = vehiclePlate;
-        //                Console.WriteLine("Your car with license plate: {0} is parked at P{1} at {2}", vehiclePlate, i, now);
-        //                break;
-        //            }
-        //        }
-        //        Console.WriteLine("\n\nPress a key to return to main menu");
-        //        Console.ReadKey();
-        //        MainMenu();
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("You entered a wrong value");
-        //        Console.WriteLine("\n\nPress a key to try again ");
-        //        Console.ReadKey();
-        //        RegisterCar();
-        //    }
-        //}
         public static string TypeOfVehicle(int input, string vehiclePlate)
         {
             if (input == 1)
@@ -250,50 +207,23 @@ namespace Main
             Console.Clear(); Console.WriteLine();
             Console.Write("Please enter the License plate number: ");
             string vehiclePlate = Console.ReadLine().ToUpper();
-            string resultPlate = Array.Find(parkingList, element => element.StartsWith("CAR@", StringComparison.Ordinal));
+            //string resultPlate = Array.Find(parkingList, element => element.StartsWith("CAR@", StringComparison.Ordinal));
             //vehiclePlate = resultPlate;
-            Console.WriteLine(resultPlate);
-            Console.WriteLine("\n\nPress a key to return to main menu");
-            Console.ReadKey();
-            //try
-            //{
-            //    if (vehiclePlate.Length <= 10)
-            //    {
-            //        if (parkingList.Contains(vehiclePlate))
-            //        {
-            //            for (int i = 1; i < parkingList.Length; i++)
-            //            {
-            //                if (parkingList[i] == vehiclePlate)
-            //                {
-            //                    parkingList[i] = null;
-            //                    Console.WriteLine("Your car with license plate: {0} has now been collected", vehiclePlate);
-            //                    break;
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            Console.WriteLine("Cannot find this license plate {0}, please try again.", vehiclePlate);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("You entered a wrong value");
-            //        Console.WriteLine("\n\nPress a key to try again ");
-            //        Console.ReadKey();
-            //        CollectVehichle();
-            //    }
-            //    Console.WriteLine("\n\nPress a key to return to main menu");
-            //    Console.ReadKey();
-            //}
-            ////MainMenu();
-            //catch (FormatException e)
-            //{
-            //    Console.WriteLine("Something went wrong {0}", e);
-            //}
+            //Console.WriteLine(resultPlate);
+
+            try
+            {
+
+            }
+
+
+            catch (FormatException e)
+            {
+                Console.WriteLine("Something went wrong {0}", e);
+            }
             return vehiclePlate;
         }
-        public static string MoveVehicle()      //TODO:
+        public static string MoveVehicle()      //TODO: Går att flytta om registrerade fordon finns men krashar om det inte finns något.
         {
             {
                 try
@@ -302,18 +232,18 @@ namespace Main
                     string vehiclePlate = Console.ReadLine().ToUpper();
                     int newSpot;
 
-                    for (int i = 1; i < parkingList.Length; i++)
+                    for (int i = 0; i < parkingList.Length; i++)
                     {
                         if (parkingList[i].Contains(vehiclePlate))
                         {
                             Console.Clear();
-                            Console.WriteLine("Your car is currently parked at {0}\n", i);
+                            Console.WriteLine("Your car is currently parked at {0}\n", i + 1);
                             Console.WriteLine("Please enter a new parking spot");
                             newSpot = int.Parse(Console.ReadLine());
 
-                            if (parkingList[newSpot] == null)
+                            if (parkingList[newSpot -1] == null)
                             {
-                                parkingList[newSpot] = parkingList[i];
+                                parkingList[newSpot -1] = parkingList[i];
                                 parkingList[i] = null;
                                 Console.WriteLine("Your vehicle with license plate {0} is moved to spot {1}", vehiclePlate, newSpot);
                                 Console.ReadKey();
@@ -341,10 +271,11 @@ namespace Main
                 {
                     Console.WriteLine("Something went wrong", e);
                 }
-                return MoveVehicle();
-            }       //TODO: Fungerar. Måste dock sorteras upp i mindre metoder
+                MainMenu();
+            }
+            return MoveVehicle();//TODO: Fungerar. Måste dock sorteras upp i mindre metoder
         }
-        public static void ShowParkingList() //Står på 99, måste lösas.
+        public static void ShowParkingList()
         {
             Console.Clear();
             Console.WriteLine("Below is the parking lot with current parked vehicles\n");
@@ -353,7 +284,7 @@ namespace Main
                 int column = 6;
                 int rows = 1;
 
-                for (int i = 1; i < parkingList.Length; i++)
+                for (int i = 0; i < parkingList.Length; i++)
                 {
                     if (rows >= column && rows % column == 0)
                     {
@@ -363,20 +294,20 @@ namespace Main
 
                     if (parkingList[i] == null)
                     {
-                        Console.Write(i + ": Empty \t");
+                        Console.Write(i + 1 + ": Empty \t");
                         rows++;
                     }
 
                     else
                     {
-                        Console.Write(i + ": " + parkingList[i] + "\t");
+                        Console.Write(i + 1 + ": " + parkingList[i] + "\t");
                         rows++;
 
                     }
                 }
                 Console.WriteLine("\n\nPress a key to try again ");
                 Console.ReadKey();
-                //MainMenu();
+                MainMenu();
             }
             //catch (FormatException e)
             //{4
