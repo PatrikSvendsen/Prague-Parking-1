@@ -43,9 +43,9 @@ namespace Main
     public class Base
     {
 
-        //public static string[] parkingList = new string[100];     //Tilldelade 100 platser för parkeringen.
+        public static string[] parkingList = new string[100];     //Tilldelade 100 platser för parkeringen.
 
-        public static string[] parkingList = {"CAR@ABC123", "CAR@ABC321", "CAR@ABC111", "" , "" };     //Test array
+        //public static string[] parkingList = {"CAR@ABC123", "CAR@ABC321", "CAR@ABC111", "" , "" };     //Test array
 
         public static void Main(string[] args)
         {
@@ -68,7 +68,7 @@ namespace Main
 
                     case 1: break;
                     case 2: break;
-                    case 3: break;
+                    case 3: MoveVehicle(); break;
                     case 4: break;
                     case 5: break;
 
@@ -76,13 +76,13 @@ namespace Main
                         Console.WriteLine("Felsökning, rad 60");
                         break;
                 }
+                #region RegisterVehicle
                 if (menu == 1)          //Registrera fordon
                 {
 
                     /*
                      * Denna undermenu skall registrera ett fordon
                      */
-
 
                     //Console.Clear();
                     Console.WriteLine();
@@ -172,7 +172,7 @@ namespace Main
 
                             if (checkLength1 && checkLength2 == true)
                             {
-                                string mcPlate = newmcPlate1 + " " + newmcPlate2;
+                                string mcPlate = newmcPlate1 + " | " + newmcPlate2;
                                 parkingList[spot] = mcPlate;
                                 Console.WriteLine("Your vehicle with license plate: {0} is now parked at P{1} at {2}", mcPlate, spot + 1, now);
                                 Console.WriteLine("Press a key to return to main menu.");
@@ -225,6 +225,7 @@ namespace Main
                     continue;
 
                 }       // Registrera fordon
+                #endregion
                 if (menu == 2)
                 {
                     /*
@@ -321,10 +322,7 @@ namespace Main
                     {
                         Console.WriteLine("Test");
                     }
-
-
-
-                }
+                }       // Flytta fordon
                 if (menu == 4)
                 {
                     /*
@@ -446,25 +444,21 @@ namespace Main
             return newVPlate;
         } //Fungerar
 
-        public static int FindVehicleSpotInList(string vehiclePlate)        // Problem att hitta korrekt SPOT. Returnerar 0 alltid
+        public static int FindVehicleSpotInList(string vehiclePlate)        // Problem att hitta korrekt SPOT. Returnerar alltid 0.
         {
             /*
              * Metod för att hitta på vilken plats fordonet står på, behöver vehiclePlate och ger ut en parking spot i form av int.
              */
+
             {
                 for (int i = 0; i < parkingList.Length; i++)
                 {
                     if (parkingList.Contains("CAR@" + vehiclePlate) || (parkingList.Contains("MC@" + vehiclePlate)))
                     {
                         parkingList[i].Contains(vehiclePlate);
-                        return i +1;
-                    }
-                    else
-                    {
-                        return -1;
+                        return i + 1;
                     }
                 }
-                
             }
             return -1;
 
@@ -477,7 +471,7 @@ namespace Main
 
             for (int i = 0; i < parkingList.Length; i++)
             {
-                if (parkingList.Contains("CAR@" + vehiclePlate) || (parkingList.Contains("MC@" + vehiclePlate)))
+                if (parkingList.Contains("CAR@" + vehiclePlate) || parkingList.Contains("MC@" + vehiclePlate))
                 {
                     if (parkingList[i].Contains(vehiclePlate))
                     {
@@ -488,8 +482,12 @@ namespace Main
             return vehiclePlate;
         }
 
-        public static int CheckIfSpotIsEmpty(bool check)
+        public static int CheckIfSpotIsEmpty(bool check)        //Fungerar
         {
+            /*
+             * Metod för att kontrollera om en plats är ledig.
+             */
+
             check = false;
             for (int i = 0; i < parkingList.Length; i++)
             {
@@ -523,57 +521,53 @@ namespace Main
         public static string MoveVehicle()      //TODO: Går att flytta om registrerade fordon finns men krashar om det inte finns något.
         {
             {
-                try
+
+                Console.WriteLine("Enter your license plate number: ");
+                string vehiclePlate = Console.ReadLine().ToUpper();
+
+                int newSpot;
+
+                //string unSplitedPlate = Console.ReadLine().ToUpper();
+                //string vehiclePlate = SplitVehiclePlates(unSplitedPlate);
+
+                for (int i = 0; i < parkingList.Length; i++)
                 {
-                    Console.WriteLine("Enter your license plate number: ");
-                    string vehiclePlate = Console.ReadLine().ToUpper();
-
-                    int newSpot;
-
-                    //string unSplitedPlate = Console.ReadLine().ToUpper();
-                    //string vehiclePlate = SplitVehiclePlates(unSplitedPlate);
-
-                    for (int i = 0; i < parkingList.Length; i++)
+                    if (parkingList[i].Contains(vehiclePlate))
                     {
-                        if (parkingList[i].Contains(vehiclePlate))
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Your vehicle is currently parked at {0}\n", i + 1);
-                            Console.WriteLine("Please enter a new parking spot");
-                            newSpot = int.Parse(Console.ReadLine());
+                        Console.Clear();
+                        Console.WriteLine("Your vehicle is currently parked at {0}\n", i + 1);
+                        Console.WriteLine("Please enter a new parking spot");
+                        newSpot = int.Parse(Console.ReadLine());
 
-                            if (parkingList[newSpot - 1] == null)
-                            {
-                                parkingList[newSpot - 1] = parkingList[i];
-                                parkingList[i] = null;
-                                Console.WriteLine("Your vehicle with license plate {0} is moved to spot {1}", vehiclePlate, newSpot);
-                                Console.ReadKey();
-                                //MainMenu();
-                                break;
-                            }
-                            else if (parkingList[newSpot] != parkingList[i])
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine();
-                                Console.WriteLine("A vehicle with {0} is already parked on this spot", parkingList[newSpot]);
-                                Console.WriteLine();
-                                Console.ResetColor();
-                                Console.ReadKey();
-                                break;
-                            }
-                        }
-                        else
+                        if (parkingList[newSpot - 1] == null)
                         {
-                            Console.WriteLine("Test");
+                            parkingList[newSpot - 1] = parkingList[i];
+                            parkingList[i] = null;
+                            Console.WriteLine("Your vehicle with license plate {0} is moved to spot {1}", vehiclePlate, newSpot);
+                            Console.ReadKey();
+                            //MainMenu();
+                            continue;
+                        }
+                        else if (parkingList[newSpot] != parkingList[i])
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine();
+                            Console.WriteLine("A vehicle with {0} is already parked on this spot", parkingList[newSpot]);
+                            Console.WriteLine();
+                            Console.ResetColor();
+                            Console.ReadKey();
+                            continue;
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("Test");
+                    }
+
                 }
-                catch (FormatException e)
-                {
-                    Console.WriteLine("Something went wrong", e);
-                }
-                //MainMenu();
             }
+            //MainMenu();
+
             return "";//TODO: Fungerar. Måste dock sorteras upp i mindre metoder
         }
         public static void ShowParkingList()
