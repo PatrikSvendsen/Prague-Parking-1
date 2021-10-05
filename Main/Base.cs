@@ -11,11 +11,11 @@ using System.Linq;
     ● Kunden önskar en textbaserad meny
 
     **TODO:
-    *Använda while-loop för menu så att den loopar tillbaka efter en metod blivit kallad.
-    *Använda switch-case i frågorna?
-    *Göra classer av metoderna/parkeringen så att man kan använda den vartsomhelst. Samt en start-class.
-    *Använda .Contains funktion, finns övningar sen tidigare där detta blev täckt.
-    *Implementera DateTime.Now för att få fram tid.
+    *
+    *
+    *
+    *
+    *
     *Fixa ticket system
     *
     *-----MENY
@@ -23,17 +23,13 @@ using System.Linq;
     **Använda try-catch funktion för meny.
     **Få in alla valbara menyer.
     *
-    *-----LIST
-    *Gör en fix så att endast text kommer upp om hur många platser som är tomma inte alla 100 på en gång.
-    *Måste även kunna identifiera vad för typ av fordon som står placerat på platsen.
-    *Går att använda "friviliga parametrar" från demo 07 Metoder för att kunna göra en visuell bild av parkeringen.
-    *
     *----MoveVehicle
-    *Går att flytta fordon, står det ett fordon på den platsen kommer felmeddelande.  
-    *.TrimEnd funktion kanske?
+    *Fungerar.
+    *Man kan flytta enskild bil eller MC. Flytta ut en MC från en dubbelparkering samt flytta in en mc till en annan mc.
+    *
     *
     *---CollectVehicle
-    *Funkar för enskilda fordon, måste anpassas för flera MC
+    *Funktion fungerar. Behöver förbättras med try & catch
     */
 
 namespace Main
@@ -42,8 +38,6 @@ namespace Main
     public class Base
     {
         public static string[] parkingList = new string[100];     //Tilldelade 100 platser för parkeringen.
-
-        //public static string[] parkingList = {"CAR@ABC123", "CAR@ABC321", "CAR@ABC111", "MC@ABC512" , "MC@BBB221" };     //Test array
         //public static string[] parkingList = new string[3];     //Test array
 
         public static void Main(string[] args)
@@ -204,7 +198,7 @@ namespace Main
                             Console.WriteLine("Press a key to return to main menu");
                             Console.ReadKey();
                         }
-                        else if (checkDuppPlate1 || checkDuppPlate2 != true)
+                        else if (checkDuppPlate1 == false || checkDuppPlate2 == false)
                         {
                             if (checkDuppPlate1 == false)
                             {
@@ -233,8 +227,6 @@ namespace Main
                 {
                     /*
                      * Program för att hämta ut fordon.
-                     * 
-                     *      Funkar ej, behöver justeras. Parkeringsplatsen töms ej. Kolla methods
                      */
 
                     //Console.Clear(); 
@@ -481,7 +473,7 @@ namespace Main
                                             string mcPlate2 = parkingList[newSpot0 - 1];
                                             //Console.WriteLine(mcPlate2);
                                             string newMcPlate = mcPlate2 + " | " + mcPlate;
-                                            string mcPlate1 = splitVehiclePlate[1];
+                                            string mcPlate1 = splitVehiclePlate[1]; https://discord.com/channels/@me/480669656613650442
                                             parkingList[i] = splitVehiclePlate[1];
                                             parkingList[newSpot0 - 1] = newMcPlate;
                                             Console.WriteLine("Vehicle with license plate {0} is moved to spot {1} and is now standing with {2}", mcPlate, newSpot0, mcPlate2);
@@ -675,15 +667,12 @@ namespace Main
             /*
              * Metod för att hitta på vilken plats fordonet står på, behöver vehiclePlate och ger ut en parking spot i form av int.
              */
-
-
             for (int i = 0; i < parkingList.Length; i++)
             {
                 if (parkingList[i] == null)
                 {
                     continue;
                 }
-                //if (parkingList.Contains("CAR@" + vehiclePlate) || (parkingList.Contains("MC@" + vehiclePlate)))
                 if (parkingList.Contains("CAR@" + vehiclePlate) || (parkingList.Contains("MC@" + vehiclePlate) || parkingList[i].Contains(" | ")))
                 {
                     if (parkingList[i].Contains("CAR@" + vehiclePlate))
@@ -695,10 +684,10 @@ namespace Main
                         return i + 1;
                     }
                 }
-                else
-                {
+                //else
+                //{
 
-                }
+                //}
             }
             return -1;
         }
@@ -742,13 +731,31 @@ namespace Main
         }
         public static bool CheckIfDupplicate(string vehiclePlate)
         {
-            if (Array.IndexOf(parkingList, "CAR@" + vehiclePlate) >= 0)
+            //if (Array.IndexOf(parkingList, "CAR@" + vehiclePlate) >= 0)
+            //{
+            //    return false;
+            //}
+            //if (Array.IndexOf(parkingList, "MC@" + vehiclePlate) >= 0)
+            //{
+            //    return false;
+            //}
+            for (int i = 0; i < parkingList.Length; i++)
             {
-                return false;
-            }
-            if (Array.IndexOf(parkingList, "MC@" + vehiclePlate) >= 0)
-            {
-                return false;
+                if (parkingList[i] == null)
+                {
+                    continue;
+                }
+                if (parkingList.Contains("CAR@" + vehiclePlate) || (parkingList.Contains("MC@" + vehiclePlate) || parkingList[i].Contains(" | ")))
+                {
+                    if (parkingList[i].Contains("CAR@" + vehiclePlate))
+                    {
+                        return false;
+                    }
+                    else if (parkingList[i].Contains("MC@" + vehiclePlate))
+                    {
+                        return false;
+                    }
+                }
             }
             return true;
         }
