@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 //using NewVehicle;
@@ -23,28 +21,15 @@ using System.Text.RegularExpressions;
 
     **TODO:
     *
-    *
-    *
     *-----MENY
     *
-    *
-    *
     *-----Registrera fordon.
-    *Funkar, dubbletter skapas - ENBART om man registrerar 2 motorcyklar där båda har samma.
-    *
-    *Behöver fixa felmeddelande vid 2 Mc inskrivning.
-    *Lägga till röd text vid fel.
     *
     *----MoveVehicle
-    *Fungerar.
-    *Man kan flytta enskild bil eller MC. Flytta ut en MC från en dubbelparkering samt flytta in en mc till en annan mc.
-    *
     *
     *---CollectVehicle
     *
     *---FindVehicle
-    *
-    *Metod för att skriva in parkeringsplats fungerar, behöver optimeras och flyttas till metod för att sedan skickas in i CollectVehicle och MoveVehicle.
     *
     */
 
